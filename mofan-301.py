@@ -81,7 +81,7 @@ sess.run(tf.global_variables_initializer())         # initialize var in graph，
 
 plt.ion()   # something about plotting
 
-for step in range(10000):
+for step in range(100):
     # train and net output
     _, l, pred = sess.run([train_op, loss, output], {tf_x: x, tf_y: y})
     if step % 5 == 0:
@@ -90,7 +90,7 @@ for step in range(10000):
         plt.scatter(x, y)
         plt.plot(x, pred, 'r-', lw=2)
         plt.text(0.5, 200, 'Loss=%.4f' % l, fontdict={'size': 20, 'color': 'red'})
-        plt.pause(0.3)
+        plt.pause(0.1)
 
 
 plt.ioff()

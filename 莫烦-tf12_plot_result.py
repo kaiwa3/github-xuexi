@@ -63,13 +63,14 @@ prediction = add_layer(l1, 10, 1, activation_function=None)
 # the error between prediction and real data，预测与真实数据之间的误差
 
 # 计算预测值prediction和真实值的误差，对二者差的平方求和再取平均。
-loss = tf.reduce_mean(tf.reduce_sum(tf.square(ys-prediction), reduction_indices=[1]))
+loss = tf.reduce_mean(tf.reduce_sum(tf.square(ys-prediction), reduction_indices=[0]))
 
 # f.train.GradientDescentOptimizer()中的值通常都小于1，这里取的是0.1，代表以0.1的效率来最小化误差loss
 train_step = tf.train.GradientDescentOptimizer(0.1).minimize(loss)
 
 # important step
 sess = tf.Session()
+# sess.run(tf.global_variables_initializer())
 
 
 # tf.initialize_all_variables() no long valid from
@@ -105,7 +106,7 @@ for i in range(1000):
         # plot the prediction
         lines = ax.plot(x_data, prediction_value, 'r-', lw=2)
         plt.text(0.5, 100, 'Loss=%.4f' % i, fontdict={'size': 20, 'color': 'red'})
-        plt.pause(0.01)
+        plt.pause(1)
 
 
 plt.ioff()
