@@ -11,45 +11,87 @@ numpy
 import tensorflow as tf
 import matplotlib.pyplot as plt
 import numpy as np
+import pandas as pd
+
 
 tf.set_random_seed(1)
-np.random.seed(1)
+# np.random.seed(1)
 
 # fake data
-x = np.linspace(-1, 1, 100)[:, np.newaxis]          # shape (100, 1)
-noise = np.random.normal(0, 0.1, size=x.shape)
-y = np.power(x, 2) + noise                          # shape (100, 1) + some noise
+# x = np.linspace(-1, 1, 100)[:, np.newaxis]          # shape (100, 1)
+# noise = np.random.normal(0, 0.1, size=x.shape)
+# y = np.power(x, 2) + noise                          # shape (100, 1) + some noise
+
+
 
 # # plot data
 # plt.scatter(x, y)
 # plt.show()
 
+
+
+
+
+
+
+# 导入自己的数据测试
+f = open('aapl.csv')
+df = pd.read_csv(f)  #读入股票数据,df=pd.read_csv(f)
+x=np.array(df['Low'])[:, np.newaxis]  #获取最高价序列
+y=np.array(df['High'])[:, np.newaxis]
+
+
+
+# print('x')
+# print(x)
+# print('y')
+# print(y)
+#
+#
+# # plot data
+# plt.plot(x,y,'r-o')
+# plt.show()
+
+
+
+
 tf_x = tf.placeholder(tf.float32, x.shape)     # input x
 tf_y = tf.placeholder(tf.float32, y.shape)     # input y
 
-# neural network layers
-l1 = tf.layers.dense(tf_x, 10, tf.nn.relu)          # hidden layer
-output = tf.layers.dense(l1, 1)                     # output layer
+# print('tf_x')
+# print(tf_x)
+# print('tf_y')
+# print(tf_y)
 
-loss = tf.losses.mean_squared_error(tf_y, output)   # compute cost
-optimizer = tf.train.GradientDescentOptimizer(learning_rate=0.5)
+# neural network layers
+l1 = tf.layers.dense(tf_x, 10, tf.nn.relu)          # hidden layer，10个神经元
+output = tf.layers.dense(l1, 1)                     # output layer，输出1层
+
+
+
+
+loss = tf.losses.mean_squared_error(tf_y, output)   # compute cost，计算成本
+optimizer = tf.train.GradientDescentOptimizer(learning_rate=0.03)
 train_op = optimizer.minimize(loss)
 
-sess = tf.Session()                                 # control training and others
-sess.run(tf.global_variables_initializer())         # initialize var in graph
+sess = tf.Session()                                 # control training and others，控制培训和其他
+sess.run(tf.global_variables_initializer())         # initialize var in graph，在图中初始化 var
+
+
 
 plt.ion()   # something about plotting
 
-for step in range(100):
+for step in range(10000):
     # train and net output
     _, l, pred = sess.run([train_op, loss, output], {tf_x: x, tf_y: y})
     if step % 5 == 0:
         # plot and show learning process
         plt.cla()
         plt.scatter(x, y)
-        plt.plot(x, pred, 'r-', lw=5)
-        plt.text(0.5, 0, 'Loss=%.4f' % l, fontdict={'size': 20, 'color': 'red'})
-        plt.pause(0.1)
+        plt.plot(x, pred, 'r-', lw=2)
+        plt.text(0.5, 200, 'Loss=%.4f' % l, fontdict={'size': 20, 'color': 'red'})
+        plt.pause(0.3)
+
 
 plt.ioff()
 plt.show()
