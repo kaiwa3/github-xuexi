@@ -71,26 +71,42 @@ output = tf.layers.dense(l1, 1)                     # output layer，输出1层
 
 
 loss = tf.losses.mean_squared_error(tf_y, output)   # compute cost，计算成本
+
+print('loss')  #  自己加的
+print(loss)  #  自己加的
+
+# optimizer = tf.train.GradientDescentOptimizer(learning_rate=0.5)                  #自己修改
 optimizer = tf.train.GradientDescentOptimizer(learning_rate=0.03)
+
+print('optimizer')  #  自己加的
+print(optimizer)
+
 train_op = optimizer.minimize(loss)
+
+# print('train_op')
+# print(train_op = optimizer.minimize(loss))  #  自己加的
 
 sess = tf.Session()                                 # control training and others，控制培训和其他
 sess.run(tf.global_variables_initializer())         # initialize var in graph，在图中初始化 var
 
-
+# print('sess.run')
+# print(sess.run(tf.global_variables_initializer()))  #  自己加的
 
 plt.ion()   # something about plotting
 
 for step in range(100):
     # train and net output
     _, l, pred = sess.run([train_op, loss, output], {tf_x: x, tf_y: y})
+    # print(sess.run(loss, feed_dict={tf_x: x, tf_y: y}))   #  自己加的
+    # if step % 50 == 0:             #  有修改
     if step % 5 == 0:
         # plot and show learning process
         plt.cla()
         plt.scatter(x, y)
         plt.plot(x, pred, 'r-', lw=2)
-        plt.text(0.5, 200, 'Loss=%.4f' % l, fontdict={'size': 20, 'color': 'red'})
-        plt.pause(0.1)
+        plt.text(90, 140, 'Loss=%.4f' % l, fontdict={'size': 20, 'color': 'red'})
+        # plt.pause(0.1)
+        plt.pause(0.01)
 
 
 plt.ioff()
