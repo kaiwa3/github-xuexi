@@ -40,7 +40,10 @@ df = pd.read_csv(f)  #读入股票数据,df=pd.read_csv(f)
 x=np.array(df['Low'])[:, np.newaxis]  #获取最高价序列
 y=np.array(df['High'])[:, np.newaxis]
 
-
+# x= x/np.max(x)
+x= x * 0.01
+# y = y/np.max(y)
+y = y * 0.01
 
 # print('x')
 # print(x)
@@ -64,7 +67,7 @@ tf_y = tf.placeholder(tf.float32, y.shape)     # input y
 # print(tf_y)
 
 # neural network layers
-l1 = tf.layers.dense(tf_x, 10, tf.nn.relu)          # hidden layer，10个神经元
+l1 = tf.layers.dense(tf_x, 20, tf.nn.relu)          # hidden layer，10个神经元
 output = tf.layers.dense(l1, 1)                     # output layer，输出1层
 
 
@@ -76,7 +79,7 @@ print('loss')  #  自己加的
 print(loss)  #  自己加的
 
 # optimizer = tf.train.GradientDescentOptimizer(learning_rate=0.5)                  #自己修改
-optimizer = tf.train.GradientDescentOptimizer(learning_rate=0.03)
+optimizer = tf.train.GradientDescentOptimizer(learning_rate=0.5)
 
 print('optimizer')  #  自己加的
 print(optimizer)
@@ -97,7 +100,7 @@ plt.ion()   # something about plotting
 for step in range(100):
     # train and net output
     _, l, pred = sess.run([train_op, loss, output], {tf_x: x, tf_y: y})
-    # print(sess.run(loss, feed_dict={tf_x: x, tf_y: y}))   #  自己加的
+    print(sess.run(loss, feed_dict={tf_x: x, tf_y: y}))   #  自己加的
     # if step % 50 == 0:             #  有修改
     if step % 5 == 0:
         # plot and show learning process
